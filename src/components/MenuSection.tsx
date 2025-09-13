@@ -4,7 +4,6 @@ import { X, Star } from 'lucide-react';
 const MenuSection = () => {
   const [activeCategory, setActiveCategory] = useState('pizzas-creme');
   const [selectedItem, setSelectedItem] = useState(null);
-  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const categories = [
     { id: 'pizzas-creme', name: 'Pizzas Base Crème', icon: '🍕', color: 'bg-[#C4513C]' },
@@ -544,8 +543,6 @@ const MenuSection = () => {
   };
 
   const handleItemClick = (item) => {
-    // Optimisation: éviter les re-renders inutiles
-    if (selectedItem?.id === item.id) return;
     setSelectedItem(item);
   };
 
@@ -554,13 +551,7 @@ const MenuSection = () => {
   };
 
   const handleCategoryChange = (categoryId) => {
-    if (activeCategory === categoryId) return;
-    
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setActiveCategory(categoryId);
-      setIsTransitioning(false);
-    }, 150);
+    setActiveCategory(categoryId);
   };
 
   // Fermer la modal en cliquant en dehors
@@ -599,7 +590,6 @@ const MenuSection = () => {
                   ? `${category.color} text-white shadow-lg scale-105`
                   : 'bg-[#F5E1D2] text-[#1C1C1C] hover:bg-[#E7A33C] hover:text-white'
               }`}
-              disabled={isTransitioning}
             >
               <span className="text-lg">{category.icon}</span>
               <span className="text-sm lg:text-base">{category.name}</span>
@@ -608,22 +598,19 @@ const MenuSection = () => {
         </div>
 
         {/* Menu Items Grid */}
-        <div className={`grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 transition-all duration-300 ${
-          isTransitioning ? 'opacity-0 transform translate-y-4' : 'opacity-100 transform translate-y-0'
-        }`}>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
           {menuItems[activeCategory]?.map((item, index) => (
             <div
               key={item.id}
               onClick={() => handleItemClick(item)}
-              className="group bg-[#F5E1D2] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer transform hover:scale-105 active:scale-95 animate-fade-in"
-              style={{ animationDelay: `${index * 100}ms` }}
+              className="group bg-[#F5E1D2] rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1 cursor-pointer"
             >
               {/* Image Container */}
               <div className="relative overflow-hidden">
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-200"
                 />
                 
                 {/* Popular Badge */}
@@ -641,7 +628,7 @@ const MenuSection = () => {
 
                 {/* Click Animation Overlay */}
                 <div className="absolute inset-0 bg-[#E7A33C]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <div className="bg-white/90 px-4 py-2 rounded-full text-[#114A2F] font-semibold text-sm">
+                  <div className="bg-white/90 px-3 py-1 rounded-full text-[#114A2F] font-semibold text-xs">
                     Cliquer pour voir les détails
                   </div>
                 </div>
@@ -672,10 +659,10 @@ const MenuSection = () => {
         {/* Modal */}
         {selectedItem && (
           <div 
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={handleModalBackdropClick}
           >
-            <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform animate-scale-up">
+            <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               {/* Modal Header */}
               <div className="relative">
                 <img
@@ -685,7 +672,7 @@ const MenuSection = () => {
                 />
                 <button
                   onClick={closeModal}
-                  className="absolute top-4 right-4 bg-white/90 hover:bg-white p-2 rounded-full transition-all duration-200 hover:scale-110 z-10"
+                  className="absolute top-4 right-4 bg-white/90 hover:bg-white p-2 rounded-full transition-colors duration-200 z-10"
                 >
                   <X className="w-6 h-6 text-[#1C1C1C]" />
                 </button>
@@ -748,7 +735,7 @@ const MenuSection = () => {
                 {/* Action Button */}
                 <button
                   onClick={closeModal}
-                  className="w-full bg-[#C4513C] text-white py-4 rounded-xl text-lg font-semibold hover:bg-[#E7A33C] hover:text-[#1C1C1C] transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg"
+                  className="w-full bg-[#C4513C] text-white py-4 rounded-xl text-lg font-semibold hover:bg-[#E7A33C] hover:text-[#1C1C1C] transition-colors duration-200 shadow-lg"
                 >
                   Fermer
                 </button>
@@ -783,41 +770,11 @@ const MenuSection = () => {
       </div>
 
       <style jsx>{`
-        .animate-scale-up {
-          animation: scaleUp 0.2s ease-out;
-        }
-        
-        @keyframes scaleUp {
-          from {
-            transform: scale(0.9);
-            opacity: 0;
-          }
-          to {
-            transform: scale(1);
-            opacity: 1;
-          }
-        }
-        
         .line-clamp-2 {
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
-        }
-        
-        .animate-fade-in {
-          animation: fadeInUp 0.4s ease-out forwards;
-        }
-        
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
         }
       `}</style>
     </section>
