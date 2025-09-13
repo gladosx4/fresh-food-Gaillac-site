@@ -225,10 +225,6 @@ const ContactSection = () => {
             >
               🗺️ Voir sur Google Maps
             </a>
-            >
-              📞 05 63 40 43 72
-            </a>
-            </button>
           </div>
         </div>
       </div>
