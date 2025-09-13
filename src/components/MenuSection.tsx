@@ -4,6 +4,7 @@ import { X, Star } from 'lucide-react';
 const MenuSection = () => {
   const [activeCategory, setActiveCategory] = useState('pizzas-creme');
   const [selectedItem, setSelectedItem] = useState(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const categories = [
     { id: 'pizzas-creme', name: 'Pizzas Base Crème', icon: '🍕', color: 'bg-[#C4513C]' },
@@ -543,11 +544,30 @@ const MenuSection = () => {
   };
 
   const handleItemClick = (item) => {
+    // Optimisation: éviter les re-renders inutiles
+    if (selectedItem?.id === item.id) return;
     setSelectedItem(item);
   };
 
   const closeModal = () => {
     setSelectedItem(null);
+  };
+
+  const handleCategoryChange = (categoryId) => {
+    if (activeCategory === categoryId) return;
+    
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setActiveCategory(categoryId);
+      setIsTransitioning(false);
+    }, 150);
+  };
+
+  // Fermer la modal en cliquant en dehors
+  const handleModalBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      closeModal();
+    }
   };
 
   return (
@@ -573,12 +593,13 @@ const MenuSection = () => {
           {categories.map((category) => (
             <button
               key={category.id}
-              onClick={() => setActiveCategory(category.id)}
+              onClick={() => handleCategoryChange(category.id)}
               className={`flex items-center space-x-2 px-4 lg:px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 ${
                 activeCategory === category.id
                   ? `${category.color} text-white shadow-lg scale-105`
                   : 'bg-[#F5E1D2] text-[#1C1C1C] hover:bg-[#E7A33C] hover:text-white'
               }`}
+              disabled={isTransitioning}
             >
               <span className="text-lg">{category.icon}</span>
               <span className="text-sm lg:text-base">{category.name}</span>
@@ -587,12 +608,14 @@ const MenuSection = () => {
         </div>
 
         {/* Menu Items Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+        <div className={`grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 transition-all duration-300 ${
+          isTransitioning ? 'opacity-0 transform translate-y-4' : 'opacity-100 transform translate-y-0'
+        }`}>
           {menuItems[activeCategory]?.map((item, index) => (
             <div
               key={item.id}
               onClick={() => handleItemClick(item)}
-              className="group bg-[#F5E1D2] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 cursor-pointer transform hover:scale-105 active:scale-95"
+              className="group bg-[#F5E1D2] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer transform hover:scale-105 active:scale-95 animate-fade-in"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Image Container */}
@@ -648,7 +671,10 @@ const MenuSection = () => {
 
         {/* Modal */}
         {selectedItem && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in"
+            onClick={handleModalBackdropClick}
+          >
             <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform animate-scale-up">
               {/* Modal Header */}
               <div className="relative">
@@ -659,7 +685,7 @@ const MenuSection = () => {
                 />
                 <button
                   onClick={closeModal}
-                  className="absolute top-4 right-4 bg-white/90 hover:bg-white p-2 rounded-full transition-all duration-200 hover:scale-110"
+                  className="absolute top-4 right-4 bg-white/90 hover:bg-white p-2 rounded-full transition-all duration-200 hover:scale-110 z-10"
                 >
                   <X className="w-6 h-6 text-[#1C1C1C]" />
                 </button>
@@ -722,7 +748,7 @@ const MenuSection = () => {
                 {/* Action Button */}
                 <button
                   onClick={closeModal}
-                  className="w-full bg-[#C4513C] text-white py-4 rounded-xl text-lg font-semibold hover:bg-[#E7A33C] hover:text-[#1C1C1C] transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg"
+                  className="w-full bg-[#C4513C] text-white py-4 rounded-xl text-lg font-semibold hover:bg-[#E7A33C] hover:text-[#1C1C1C] transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg"
                 >
                   Fermer
                 </button>
@@ -758,7 +784,7 @@ const MenuSection = () => {
 
       <style jsx>{`
         .animate-scale-up {
-          animation: scaleUp 0.3s ease-out;
+          animation: scaleUp 0.2s ease-out;
         }
         
         @keyframes scaleUp {
@@ -777,6 +803,21 @@ const MenuSection = () => {
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
+        }
+        
+        .animate-fade-in {
+          animation: fadeInUp 0.4s ease-out forwards;
+        }
+        
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
       `}</style>
     </section>

@@ -119,10 +119,29 @@ const ContactSection = () => {
 
           {/* Contact Form & Map */}
           <div className="space-y-8">
+            {/* Google Maps */}
+            <div className="bg-white rounded-2xl p-6 shadow-lg">
+              <h3 className="text-xl font-bold text-[#114A2F] mb-4 text-center">
+                🗺️ Nous localiser
+              </h3>
+              <div className="rounded-xl overflow-hidden shadow-lg">
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2874.924483835293!2d1.8958349765408171!3d43.898830736509105!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12add32527cc1207%3A0xe4e6e3fe531096ec!2sFRESH%20FOOD!5e0!3m2!1sfr!2sfr!4v1757757751563!5m2!1sfr!2sfr" 
+                  width="100%" 
+                  height="300" 
+                  style={{border:0}} 
+                  allowFullScreen="" 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full h-64 lg:h-80"
+                ></iframe>
+              </div>
+            </div>
+
             {/* Contact Form */}
             <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-lg">
               <h3 className="text-2xl font-bold text-[#114A2F] mb-6 text-center">
-                💬 Nous écrire
+                ✉️ Nous écrire
               </h3>
               
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -178,26 +197,6 @@ const ContactSection = () => {
                   <span>Envoyer le message</span>
                 </button>
               </form>
-            </div>
-
-            {/* Map Placeholder */}
-            {/* Google Maps */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="text-xl font-bold text-[#114A2F] mb-4 text-center">
-                🗺️ Nous localiser
-              </h3>
-              <div className="rounded-xl overflow-hidden shadow-lg">
-                <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2874.924483835293!2d1.8958349765408171!3d43.898830736509105!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12add32527cc1207%3A0xe4e6e3fe531096ec!2sFRESH%20FOOD!5e0!3m2!1sfr!2sfr!4v1757757751563!5m2!1sfr!2sfr" 
-                  width="100%" 
-                  height="300" 
-                  style={{border:0}} 
-                  allowFullScreen="" 
-                  loading="lazy" 
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="w-full h-64 lg:h-80"
-                ></iframe>
-              </div>
             </div>
           </div>
         </div>
