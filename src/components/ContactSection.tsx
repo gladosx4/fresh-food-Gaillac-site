@@ -138,66 +138,7 @@ const ContactSection = () => {
               </div>
             </div>
 
-            {/* Contact Form */}
-            <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-lg">
-              <h3 className="text-2xl font-bold text-[#114A2F] mb-6 text-center">
-                ✉️ Nous écrire
-              </h3>
-              
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label className="block text-sm font-semibold text-[#114A2F] mb-2">
-                    Nom *
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 rounded-xl border-2 border-[#F5E1D2] focus:border-[#E7A33C] focus:outline-none transition-colors bg-[#F5E1D2]/30"
-                    placeholder="Votre nom"
-                  />
-                </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-[#114A2F] mb-2">
-                    Téléphone *
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 rounded-xl border-2 border-[#F5E1D2] focus:border-[#E7A33C] focus:outline-none transition-colors bg-[#F5E1D2]/30"
-                    placeholder="Votre numéro de téléphone"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-[#114A2F] mb-2">
-                    Message
-                  </label>
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    rows={4}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-[#F5E1D2] focus:border-[#E7A33C] focus:outline-none transition-colors bg-[#F5E1D2]/30 resize-none"
-                    placeholder="Votre message, demande de réservation..."
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-[#C4513C] text-white py-4 rounded-xl font-semibold hover:bg-[#E7A33C] hover:text-[#1C1C1C] transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center space-x-2"
-                >
-                  <Send className="w-5 h-5" />
-                  <span>Envoyer le message</span>
-                </button>
-              </form>
-            </div>
           </div>
         </div>
 
